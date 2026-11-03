@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title> Open When You're Sad</title>
+        <style> 
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+                padding: 24px;
+                background: #ffe6f0;
+                font-family: sans-serif;
+                text-align: center;
+            }
+            button {
+                font-size: 1.2rem;
+                padding: 14px 28px;
+                border-radius: 999px;
+                background: #ff5c9a;
+                color: white;
+                transition: background 0.2s;
+            }
+            .screen {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head> 
+    <body>
+        <div id="cover" class="screen">
+            <h1>Open When You're Sad</h1>
+            <button id="OpenBtn">Open</button>
+        </div>
+
+        <div id="entry" class="screen hidden">
+            <p>Are You Feeling Sad Right Now?</p>
+            <button id="YesBtn">Yes</button>
+            <button id="NoBtn">No</button>
+            <p id="nahMsg" class="hidden">Nah You Can't lie To Me, you wouldn't Be able to Enter This Program If You Weren't. Just Be Honest</p>  
+            </p>
+        </div>
+
+        <div id="Opening" class="screen hidden">
+            <p>Why Are You Sad? It's a bad sign for the whole galaxy, because they gave you a bad day.</p>
+            </div>
+
+            <script>
+                const entry = document.getElementById("entry");
+                const opening = document.getElementById("Opening");
+                const yesBtn = document.getElementById("YesBtn");
+                const noBtn = document.getElementById("NoBtn");
+                const nahMsg = document.getElementById("nahMsg");
+                const cover = document.getElementById("cover");
+                const openBtn = document.getElementById("OpenBtn");
+
+                OpenBtn.addEventListener("click", () => {
+                    cover.classList.add("hidden");
+                    entry.classList.remove("hidden");
+                });
+                
+                let nahShown = false;
+                let noScale = 1;
+                let yesScale = 1;
+
+                yesBtn.addEventListener("click", () => {
+                    entry.classList.add("hidden");
+                    opening.classList.remove("hidden");
+                });
+
+            noBtn.addEventListener("pointerdown", () => {
+                if (!nahShown) {
+                    nahMsg.classList.remove("hidden");
+                    nahShown = true;
+                    return;
+                }
+        
+                noScale = Math.max(0.4, noScale - 0.12);
+                yesScale = Math.min(1.8, yesScale + 0.15);
+                noBtn.style.transform = `scale(${noScale})`;
+                yesBtn.style.transform = `scale(${yesScale})`;
+                moveNoButton(); 
+            });
+
+            function moveNoButton() {
+                noBtn.style.position = "fixed";
+                const maxX = window.innerWidth - noBtn.offsetWidth;
+                const maxY = window.innerHeight - noBtn.offsetHeight;
+                noBtn.style.left = Math.random() * maxX + "px";
+                noBtn.style.top = Math.random() * maxY + "px";
+            }
+            </script>
+    </body>
+</html>
+
