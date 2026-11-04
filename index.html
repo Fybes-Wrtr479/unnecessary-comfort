@@ -61,27 +61,41 @@
             <button id="jokeYesBtn">Yes</button>
             <button id="jokeNoBtn">No</button>
             <p id="jokeNoMsg" class="hidden">Right, what kind of silly person will make a joke when their friend is sad?</p>
+            <button id="jokeNextbtn" class="hidden">Next</button>
+        </div>
+        <div id="chain" class="screen hidden">
+            <p id="chainText"></p></p>
+            <button id="chainBtnA"></button>
+            <button id="chainBtnB"></button>
         </div>
 
             <script>
+                // all the buttons and screens
+                const cover = document.getElementById("cover");
+                const openBtn = document.getElementById("OpenBtn");
                 const entry = document.getElementById("entry");
-                const opening = document.getElementById("Opening");
                 const yesBtn = document.getElementById("YesBtn");
                 const noBtn = document.getElementById("NoBtn");
                 const nahMsg = document.getElementById("nahMsg");
-                const cover = document.getElementById("cover");
-                const openBtn = document.getElementById("OpenBtn");
+                const opening = document.getElementById("Opening");
                 const nextBtn = document.getElementById("nextBtn");
                 const joke = document.getElementById("Joke");
                 const jokeYesBtn = document.getElementById("jokeYesBtn");
                 const jokeNoBtn = document.getElementById("jokeNoBtn");
                 const jokeNoMsg = document.getElementById("jokeNoMsg");
+                const jokeNextbtn = document.getElementById("jokeNextbtn");
+                const chain = document.getElementById("chain");
+                const chainText = document.getElementById("chainText");
+                const chainBtnA = document.getElementById("chainBtnA");
+                const chainBtnB = document.getElementById("chainBtnB");
 
+                // Cover Open Button
                 OpenBtn.addEventListener("click", () => {
                     cover.classList.add("hidden");
                     entry.classList.remove("hidden");
                 });
                 
+                // Entry: Yes and the Dodging No Button
                 let nahShown = false;
                 let noScale = 1;
                 let yesScale = 1;
@@ -112,6 +126,52 @@
                 noBtn.style.left = Math.random() * maxX + "px";
                 noBtn.style.top = Math.random() * maxY + "px";
             }
+            // Opening 1: Next Button
+            nextBtn.addEventListener("click", () => {
+                opening.classList.add("hidden");
+                joke.classList.remove("hidden");
+            });
+
+            // Joke question: No button
+            jokeNoBtn.addEventListener("click", () => {
+                jokeNoMsg.classList.remove("hidden");
+                jokeNextbtn.classList.remove("hidden");
+            });
+
+            // Joke question: Yes button the making sure chain
+            const steps = [
+                { text: "Are You Sure? You Can Choose Again.", a: "Okay", b: "Yes", goesOn: "b" },
+                { text: "Really?", a: "Okay, I change my mind", b: "Yes", goesOn: "b" },
+                { text: "Hmmm.... if you're really sure about it, do you want to change your mind?", a: "Okay", b: "No, go on", goesOn: "b" },
+                { text: "For The Last Time, Are You Sure?", a: "Yes", b: "I've Changed My Mind", goesOn: "a" },
+                { text: "C'mon gurl, ae you REALLY sure about your choice?", a: "Yes, For Real", b: "No, I've Changed My Mind For Sure", goesOn: "a" },
+                { text: "It's REALLY REALLY for the Last Time, are you REALLY REALLY REALLY sure about it?", a: "Yes, I'm Hella sure! Stop asking me, you're so aaakh!", b: "Fine, Just take me back to the menu", goesOn: "a" }
+            ];
+
+            let step = 0;
+
+            function showStep() {
+                const s = steps[step];
+                chainText.textContent = s.text;
+                chainBtnA.textContent = s.a;
+                chainBtnB.textContent = s.b;
+            }
+
+            function goBackToOpening() {
+                chain.classList.add("hidden");
+                opening.classList.remove("hidden");
+            }
+
+            function choose(choice) {
+                if (choice === steps[step].goesOn) {
+                    step = step + 1;
+                    if (step < steps.length) {
+                        showStep();
+                    } 
+                } else {
+                        goBackToOpening();
+                    }
+                }        
             </script>
     </body>
 </html>
