@@ -53,7 +53,15 @@
 
         <div id="Opening" class="screen hidden">
             <p>Why Are You Sad? It's a bad sign for the whole galaxy, because they gave you a bad day.</p>
-            </div>
+            <button id="nextBtn">Next</button>
+        </div>
+
+        <div id="Joke" class="screen hidden">
+            <p>Would a joke or meme will make you better?</p>
+            <button id="jokeYesBtn">Yes</button>
+            <button id="jokeNoBtn">No</button>
+            <p id="jokeNoMsg" class="hidden">Right, what kind of silly person will make a joke when their friend is sad?</p>
+        </div>
 
             <script>
                 const entry = document.getElementById("entry");
@@ -63,6 +71,11 @@
                 const nahMsg = document.getElementById("nahMsg");
                 const cover = document.getElementById("cover");
                 const openBtn = document.getElementById("OpenBtn");
+                const nextBtn = document.getElementById("nextBtn");
+                const joke = document.getElementById("Joke");
+                const jokeYesBtn = document.getElementById("jokeYesBtn");
+                const jokeNoBtn = document.getElementById("jokeNoBtn");
+                const jokeNoMsg = document.getElementById("jokeNoMsg");
 
                 OpenBtn.addEventListener("click", () => {
                     cover.classList.add("hidden");
