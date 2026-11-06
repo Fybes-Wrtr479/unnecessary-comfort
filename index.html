@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Open When You're Sad</title>
+    <title>Open When You're Sad</title>
     <style>
         body {
             margin: 0;
@@ -15,7 +15,8 @@
             justify-content: center;
             gap: 16px;
             padding: 24px;
-            background: #ffe6f0;
+            background: #fff7e6;
+            color: #2d3436;
             font-family: sans-serif;
             text-align: center;
         }
@@ -24,9 +25,22 @@
             font-size: 1.2rem;
             padding: 14px 28px;
             border-radius: 999px;
-            background: #ff5c9a;
+            background: #ffb627;
             color: white;
+            border: none;
             transition: background 0.2s;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 20px;
+            width: 80%;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: pan-y;
         }
 
         .screen {
@@ -45,46 +59,70 @@
 <body>
     <div id="cover" class="screen">
         <h1>Open When You're Sad</h1>
-        <button id="OpenBtn">Open</button>
+        <button id="openBtn">Open</button>
     </div>
 
     <div id="entry" class="screen hidden">
         <p>Are You Feeling Sad Right Now?</p>
-        <button id="YesBtn">Yes</button>
-        <button id="NoBtn">No</button>
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
         <p id="nahMsg" class="hidden">Nah You Can't lie To Me, you wouldn't Be able to Enter This Program If You
             Weren't. Just Be Honest</p>
-        </p>
     </div>
 
-    <div id="Opening" class="screen hidden">
+    <div id="opening" class="screen hidden">
         <p>Why Are You Sad? It's a bad sign for the whole galaxy, because they gave you a bad day.</p>
         <button id="nextBtn">Next</button>
     </div>
 
-    <div id="Joke" class="screen hidden">
+    <div id="joke" class="screen hidden">
         <p>Would a joke or meme will make you feel better?</p>
         <button id="jokeYesBtn">Yes</button>
         <button id="jokeNoBtn">No</button>
         <p id="jokeNoMsg" class="hidden">Right, what kind of silly person will make a joke when their friend is sad?</p>
         <button id="jokeNextbtn" class="hidden">Next</button>
     </div>
+
     <div id="chain" class="screen hidden">
         <p id="chainText"></p>
-        </p>
         <button id="chainBtnA"></button>
         <button id="chainBtnB"></button>
     </div>
 
+    <div id="finalStep" class="screen hidden">
+        <p>For real, if you really want it</p>
+        <button id="giveJokeBtn">Give Me a Joke</button>
+    </div>
+
+    <div id="jokeResult" class="screen hidden">
+        <p id="jokeText"></p>
+        <p>Want More Jokes?</p>
+        <button id="moreYesBtn">Yes</button>
+        <button id="moreNoBtn">No</button>
+    </div>
+
+    <div id="boxes" class="screen hidden">
+        <p>Here are some boxes to open when you're sad</p>
+        <button id="randomBox">Random</button>
+        <button id="dramaBox">Drama</button>
+        <button id="gameBox">Game</button>
+        <button id="scienceBox">Science</button>
+    </div>
+
+    <div id="cardScreen" class="screen hidden">
+        <p id="cardText" class="card"></p>
+        <button id="cardNextBtn">Next joke</button>
+        <button id="cardBackBtn">Back</button>
+    </div>
+
     <script>
-        // all the buttons and screens
         const cover = document.getElementById("cover");
-        const openBtn = document.getElementById("OpenBtn");
+        const openBtn = document.getElementById("openBtn");
         const entry = document.getElementById("entry");
-        const yesBtn = document.getElementById("YesBtn");
-        const noBtn = document.getElementById("NoBtn");
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
         const nahMsg = document.getElementById("nahMsg");
-        const opening = document.getElementById("Opening");
+        const opening = document.getElementById("opening");
         const nextBtn = document.getElementById("nextBtn");
         const joke = document.getElementById("joke");
         const jokeYesBtn = document.getElementById("jokeYesBtn");
@@ -95,14 +133,31 @@
         const chainText = document.getElementById("chainText");
         const chainBtnA = document.getElementById("chainBtnA");
         const chainBtnB = document.getElementById("chainBtnB");
+        const finalStep = document.getElementById("finalStep");
+        const giveJokeBtn = document.getElementById("giveJokeBtn");
+        const jokeResult = document.getElementById("jokeResult");
+        const jokeText = document.getElementById("jokeText")
+        const moreYesBtn = document.getElementById("moreYesBtn");
+        const moreNoBtn = document.getElementById("moreNoBtn");
+        const boxes = document.getElementById("boxes");
+        const cardScreen = document.getElementById("cardScreen");
+        const cardText = document.getElementById("cardText");
+        const cardNextBtn = document.getElementById("cardNextBtn");
+        const cardBackBtn = document.getElementById("cardBackBtn");
+        const randomBox = document.getElementById("randomBox");
+        const dramaBox = document.getElementById("dramaBox");
+        const gameBox = document.getElementById("gameBox");
+        const scienceBox = document.getElementById("scienceBox");
 
-        // Cover Open Button
-        OpenBtn.addEventListener("click", () => {
+        let currentTopic = "random";
+        let mood = "sad";
+
+
+        openBtn.addEventListener("click", () => {
             cover.classList.add("hidden");
             entry.classList.remove("hidden");
         });
 
-        // Entry: Yes and the Dodging No Button
         let nahShown = false;
         let noScale = 1;
         let yesScale = 1;
@@ -118,9 +173,8 @@
                 nahShown = true;
                 return;
             }
-
             noScale = Math.max(0.4, noScale - 0.12);
-            yesScale = Math.min(1.8, yesScale + 0.15);
+            yesScale = Math.min(1.8, yesScale + 0.25);
             noBtn.style.transform = `scale(${noScale})`;
             yesBtn.style.transform = `scale(${yesScale})`;
             moveNoButton();
@@ -133,21 +187,107 @@
             noBtn.style.left = Math.random() * maxX + "px";
             noBtn.style.top = Math.random() * maxY + "px";
         }
-        // Opening 1: Next Button
+
         nextBtn.addEventListener("click", () => {
             opening.classList.add("hidden");
             joke.classList.remove("hidden");
         });
 
-        // Joke question: No button
+        chainBtnA.addEventListener("click", () => choose("a"));
+        chainBtnB.addEventListener("click", () => choose("b"));
+        jokeYesBtn.addEventListener("click", () => {
+            step = 0;
+            showStep();
+            joke.classList.add("hidden");
+            chain.classList.remove("hidden");
+        });
+
         jokeNoBtn.addEventListener("click", () => {
             jokeNoMsg.classList.remove("hidden");
             jokeNextbtn.classList.remove("hidden");
         });
 
-        // Joke question: Yes button the making sure chain
+        jokeNextbtn.addEventListener("click", () => {
+            joke.classList.add("hidden");
+            chain.classList.remove("hidden");
+            showStep();
+        });
+
+        giveJokeBtn.addEventListener("click", () => {
+            jokeText.textContent = pickJoke("random");
+            finalStep.classList.add("hidden");
+            jokeResult.classList.remove("hidden");
+        });
+
+        moreNoBtn.addEventListener("click", () => {
+            jokeResult.classList.add("hidden");
+            opening.classList.remove("hidden");
+        });
+
+        moreYesBtn.addEventListener("click", () => {
+            jokeResult.classList.add("hidden");
+            boxes.classList.remove("hidden");
+        });
+
+        function openCard(topic) {
+            currentTopic = topic;
+            cardText.textContent = pickJoke(topic);
+            boxes.classList.add("hidden");
+            cardScreen.classList.remove("hidden");
+        }
+
+        randomBox.addEventListener("click", () => openCard("random"));
+        dramaBox.addEventListener("click", () => openCard("drama"));
+        gameBox.addEventListener("click", () => openCard("game"));
+        scienceBox.addEventListener("click", () => openCard("science"));
+
+        cardNextBtn.addEventListener("click", () => {
+            cardText.textContent = pickJoke(currentTopic);
+        });
+
+        cardBackBtn.addEventListener("click", () => {
+            cardScreen.classList.add("hidden");
+            boxes.classList.remove("hidden");
+        });
+ 
+        let startX = 0;
+
+        cardText.addEventListener("pointerdown", (e) => {
+            startX = e.clientX;
+        });
+
+        cardText.addEventListener("pointerup", (e) => {
+            const distance = e.clientX - startX;
+            if (Math.abs(distance) > 50) {
+                cardText.textContent = pickJoke(currentTopic);
+            }
+        });
+
+        const jokes = [
+            { mood: "sad", topic: "random", joke: "Sad random joke1" },
+            { mood: "angry", topic: "random", joke: "Angry random joke1" },
+            { mood: "bored", topic: "random", joke: "Bored random joke1" },
+            { mood: "all", topic: "random", joke: "Everyone random joke1" },
+            { mood: "all", topic: "game", joke: "Game joke1" },
+            { mood: "all", topic: "drama", joke: "Drama joke1" },
+            { mood: "all", topic: "science", joke: "Science joke1" }
+        ];
+
+        function pickJoke(topic) {
+            let list;
+            if (topic === "random") {
+                list = jokes.filter(j => j.topic === "random" && (j.mood === mood || j.mood === "all"));
+            } else {
+                list = jokes.filter(j => j.topic === topic && j.mood == "all");
+            }
+            if (list.length === 0) {
+                return "no jokes here yet";
+            }
+            return list[Math.floor(Math.random() * list.length)].joke;
+        }
+
         const steps = [
-            { text: "Are You Sure? You Can Choose Again.", a: "Okay", b: "Yes", goesOn: "b" },
+            { text: "Are You Sure? You Can Choose Again.", a: "Okay, i'll choose the other", b: "Yes", goesOn: "b" },
             { text: "Really?", a: "Okay, I change my mind", b: "Yes", goesOn: "b" },
             { text: "Hmmm.... if you're really sure about it, do you want to change your mind?", a: "Okay", b: "No, go on", goesOn: "b" },
             { text: "For The Last Time, Are You Sure?", a: "Yes", b: "I've Changed My Mind", goesOn: "a" },
@@ -174,6 +314,9 @@
                 step = step + 1;
                 if (step < steps.length) {
                     showStep();
+                } else {
+                    chain.classList.add("hidden");
+                    finalStep.classList.remove("hidden");
                 }
             } else {
                 goBackToOpening();

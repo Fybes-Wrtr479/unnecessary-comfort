@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Open When You're Sad</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 24px;
+            background: #ffe6f0;
+            font-family: sans-serif;
+            text-align: center;
+        }
+        button {
+            font-size: 1.2rem;
+            padding: 14px 28px;
+            border-radius: 999px;
+            border: none;
+            background: #ff5c9a;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="cover" class="screen">
+        <h1>Open When You're Sad</h1>
+        <button id="openBtn">Open</button>
+    </div>
+
+    <div id="entry" class="screen hidden">
+        <p>Are You Feeling Sad Right Now?</p>
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+        <p id="nahMsg" class="hidden">Nah You Can't lie To Me, you wouldn't Be able to Enter This Program If You Weren't. Just Be Honest</p>
+    </div>
+
+    <div id="opening" class="screen hidden">
+        <p>Why Are You Sad? It's a bad sign for the whole galaxy, because they gave you a bad day.</p>
+        <button id="nextBtn">Next</button>
+    </div>
+
+    <div id="joke" class="screen hidden">
+        <p>Would a joke or meme will make you feel better?</p>
+        <button id="jokeYesBtn">Yes</button>
+        <button id="jokeNoBtn">No</button>
+        <p id="jokeNoMsg" class="hidden">Right, what kind of silly person will make a joke when their friend is sad?</p>
+        <button id="jokeNextBtn" class="hidden">Next</button>
+    </div>
+
+    <div id="chain" class="screen hidden">
+        <p id="chainText"></p>
+        <button id="chainBtnA"></button>
+        <button id="chainBtnB"></button>
+    </div>
+
+    <script>
+        const cover = document.getElementById("cover");
+        const openBtn = document.getElementById("openBtn");
+        const entry = document.getElementById("entry");
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        const nahMsg = document.getElementById("nahMsg");
+        const opening = document.getElementById("opening");
+        const nextBtn = document.getElementById("nextBtn");
+        const joke = document.getElementById("joke");
+        const jokeYesBtn = document.getElementById("jokeYesBtn");
+        const jokeNoBtn = document.getElementById("jokeNoBtn");
+        const jokeNoMsg = document.getElementById("jokeNoMsg");
+        const jokeNextBtn = document.getElementById("jokeNextBtn");
+        const chain = document.getElementById("chain");
+        const chainText = document.getElementById("chainText");
+        const chainBtnA = document.getElementById("chainBtnA");
+        const chainBtnB = document.getElementById("chainBtnB");
+
+        openBtn.addEventListener("click", () => {
+            cover.classList.add("hidden");
+            entry.classList.remove("hidden");
+        });
+
+        let nahShown = false;
+        let noScale = 1;
+        let yesScale = 1;
+
+        yesBtn.addEventListener("click", () => {
+            entry.classList.add("hidden");
+            opening.classList.remove("hidden");
+        });
+
+        noBtn.addEventListener("click", () => {
+            if (!nahShown) {
+                nahMsg.classList.remove("hidden");
+                nahShown = true;
+                return;
+            }
+            noScale = Math.max(0.4, noScale - 0.12);
+            yesScale = Math.min(1.8, yesScale + 0.25);
+            noBtn.style.transform = `scale(${noScale})`;
+            yesBtn.style.transform = `scale(${yesScale})`;
+            moveNoButton();
+        });
+
+        function moveNoButton() {
+            noBtn.style.position = "fixed";
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            noBtn.style.left = Math.random() * maxX + "px";
+            noBtn.style.top = Math.random() * maxY + "px";
+        }
+
+        nextBtn.addEventListener("click", () => {
+            opening.classList.add("hidden");
+            joke.classList.remove("hidden");
+        });
+
+        jokeNoBtn.addEventListener("click", () => {
+            jokeNoMsg.classList.remove("hidden");
+            jokeNextBtn.classList.remove("hidden");
+        });
+
+        jokeNextBtn.addEventListener("click", () => {
+            joke.classList.add("hidden");
+            opening.classList.remove("hidden");
+        });
+
+        const steps = [
+            { text: "Are You Sure? You Can Choose Again.", a: "Okay", b: "Yes", goesOn: "b" },
+            { text: "Really?", a: "Okay, I change my mind", b: "Yes", goesOn: "b" },
+            { text: "Hmmm.... if you're really sure about it, do you want to change your mind?", a: "Okay", b: "No, go on", goesOn: "b" },
+            { text: "For The Last Time, Are You Sure?", a: "Yes", b: "I've Changed My Mind", goesOn: "a" },
+            { text: "C'mon gurl, are you REALLY sure about your choice?", a: "Yes, For Real", b: "No, I've Changed My Mind For Sure", goesOn: "a" },
+            { text: "It's REALLY REALLY for the Last Time, are you REALLY REALLY REALLY sure about it?", a: "Yes, I'm Hella sure! Stop asking me, you're so aaakh!", b: "Fine, Just take me back to the menu", goesOn: "a" }
+        ];
+
+        let step = 0;
+
+        function showStep() {
+            const s = steps[step];
+            chainText.textContent = s.text;
+            chainBtnA.textContent = s.a;
+            chainBtnB.textContent = s.b;
+        }
+
+        function goBackToOpening() {
+            chain.classList.add("hidden");
+            opening.classList.remove("hidden");
+            step = 0;
+        }
+
+        function choose(choice) {
+            const current = steps[step];
+            if (choice === current.goesOn) {
+                step++;
+                if (step < steps.length) {
+                    showStep();
+                } else {
+                    chainText.textContent = "Okay okay, I respect your choice. *hugs*";
+                    chainBtnA.classList.add("hidden");
+                    chainBtnB.classList.add("hidden");
+                }
+            } else {
+                goBackToOpening();
+            }
+        }
+
+        jokeYesBtn.addEventListener("click", () => {
+            joke.classList.add("hidden");
+            chain.classList.remove("hidden");
+            chainBtnA.classList.remove("hidden");
+            chainBtnB.classList.remove("hidden");
+            step = 0;
+            showStep();
+        });
+
+        chainBtnA.addEventListener("click", () => choose("a"));
+        chainBtnB.addEventListener("click", () => choose("b"));
+    </script>
+</body>
+</html>
